@@ -2,6 +2,7 @@
 appcompat_v7/
 past_works/
 
+.png
 
 # Built application files
 *.apk
