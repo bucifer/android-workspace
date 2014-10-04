@@ -2,7 +2,10 @@
 appcompat_v7/
 past_works/
 
-.png
+*.png
+*.jpg
+*.gif
+*.jpeg
 
 # Built application files
 *.apk
