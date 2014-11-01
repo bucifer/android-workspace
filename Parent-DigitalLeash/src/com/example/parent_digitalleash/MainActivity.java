@@ -31,6 +31,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -40,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
 	EditText radiusEditTextField;
 	EditText usernameEditTextField;
 	Button createNewUserButton;
+	TextView confirmTextViewLabel;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +95,6 @@ public class MainActivity extends ActionBarActivity {
 				}
 				else {
 					new PostRequestAsyncTask().execute(); 
-			        Log.d("TERRY","post request done");
 				}
 			}
 		});  
@@ -134,10 +136,9 @@ public class MainActivity extends ActionBarActivity {
     {
               protected void onPreExecute()
               {           super.onPreExecute();
-                        //display progressdialog.
+                        //display progress dialog.
               } 
-
-               protected Void doInBackground(Void ...params)
+              protected Void doInBackground(Void ...params)
               {  
                 //http request. do not update ui here 
            		JSONObject jsonobj;
@@ -162,10 +163,10 @@ public class MainActivity extends ActionBarActivity {
            	        HttpResponse httpresponse = httpClient.execute(httpPost);
            	        String responseText = null;
            	        try {
-           	        responseText = EntityUtils.toString(httpresponse.getEntity());
+           	        	responseText = EntityUtils.toString(httpresponse.getEntity());
            	        }catch (ParseException e) {
-           	        e.printStackTrace();
-           	        Log.i("Parse Exception", e + "");
+           	        	e.printStackTrace();
+           	        	Log.i("Parse Exception", e + "");
            	        }
            	        
            		} catch (JSONException e) {
@@ -181,16 +182,17 @@ public class MainActivity extends ActionBarActivity {
            			// TODO Auto-generated catch block
            			e.printStackTrace();
            		}
-
                     return null;
               } 
-
                protected void onPostExecute(Void result)
               {     
                         super.onPostExecute(result);
+                        confirmTextViewLabel.setText("allright allright allrightttt post successful");
+                        Toast.makeText(MainActivity.this,
+                        	    "onPostExecute", Toast.LENGTH_LONG).show();
+    			        Log.d("TERRY","post request successful");
 
               } 
-
     }
     
     
