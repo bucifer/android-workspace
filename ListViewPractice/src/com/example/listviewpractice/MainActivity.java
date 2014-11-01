@@ -1,36 +1,26 @@
-package com.example.simpleactivitypractice;
+package com.example.listviewpractice;
 
-import android.support.v7.app.ActionBarActivity;
-import android.content.Intent;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ListActivity {
 
-	public static String myString;
-	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        myString = "Hi baby";
+        //ArrayAdapter takes the string array and adapts it to be laid out for our listview
+        setListAdapter(new ArrayAdapter<String>(this, 
+        		android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.companies)));
         
-        Button myButton = (Button) findViewById(R.id.button1);
-        myButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				startActivity(new Intent(MainActivity.this, SecondActivity.class));
-			}
-		});
-        
+        //this is a simple default style for listview, simple list item 1.
+        //you can create your custom cells too, your custom layout
+        		
     }
 
 
