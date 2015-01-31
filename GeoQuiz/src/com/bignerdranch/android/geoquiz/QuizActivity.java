@@ -2,6 +2,7 @@ package com.bignerdranch.android.geoquiz;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +15,13 @@ public class QuizActivity extends ActionBarActivity {
 	
 	private Button mTrueButton;
 	private Button mFalseButton;
+	
+	private Button mPrevButton;
 	private Button mNextButton;
+	
 	private TextView mQuestionTextView;
 	
-	private TrueFalse[] mQuestionBank = new TrueFalse[] {
+	private TrueFalse[] mQuestionsBank = new TrueFalse[] {
 		new TrueFalse(R.string.question_oceans, true),
 		new TrueFalse(R.string.question_mideast, false),
 		new TrueFalse(R.string.question_americas, true),
@@ -31,13 +35,24 @@ public class QuizActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
         
+        mQuestionTextView = (TextView) findViewById(R.id.question_textview);
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mCurrentIndex = (mCurrentIndex + 1) % mQuestionsBank.length;
+				updateQuestion();
+			}
+		});
+        
         mTrueButton = (Button) findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(QuizActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
+				checkAnswer(true);
 			}
 		});
         
@@ -47,12 +62,51 @@ public class QuizActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(QuizActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
+				checkAnswer(false);
 			}
 		});
+        
+        mNextButton = (Button) findViewById(R.id.next_button);
+        mNextButton.setOnClickListener(new View.OnClickListener() {		
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mCurrentIndex = (mCurrentIndex + 1) % mQuestionsBank.length;
+				updateQuestion();
+			}
+		});
+        
+        mPrevButton = (Button) findViewById(R.id.previous_button);
+        mPrevButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mCurrentIndex = (mCurrentIndex - 1);
+				if (mCurrentIndex < 0)
+					mCurrentIndex = mQuestionsBank.length-1;
+				updateQuestion();
+			}
+		});
+        
+        updateQuestion();
+    }
+    
+    private void updateQuestion() {
+		int IdResForNextQuestionString = mQuestionsBank[mCurrentIndex].getQuestion();
+		mQuestionTextView.setText(IdResForNextQuestionString);
     }
 
-
+    private void checkAnswer(boolean userPressedTrue) {
+    	boolean answerIsTrue = mQuestionsBank[mCurrentIndex].isTrueQuestion();
+    	int messageResId = 0;
+    	if (userPressedTrue == answerIsTrue) {
+    		messageResId = R.string.correct_toast;
+    	} else {
+    		messageResId = R.string.incorrect_toast;
+    	}
+    	Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
