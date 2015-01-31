@@ -34,6 +34,16 @@ public class QuizActivity extends ActionBarActivity {
 	private static final String TAG = "TERRY";
 	private static final String KEY_INDEX = "index";
 	
+	private boolean mIsCheater;
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (data == null) {
+			return;
+		}
+			mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+	}
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +91,7 @@ public class QuizActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				mCurrentIndex = (mCurrentIndex + 1) % mQuestionsBank.length;
+				mIsCheater = false;
 				updateQuestion();
 			}
 		});
@@ -113,7 +124,8 @@ public class QuizActivity extends ActionBarActivity {
 				//the Intent constructor in this case uses (Context, class) parameters.
 				//Context refers to the package that the new activity should be found in
 				Intent i = new Intent(QuizActivity.this, CheatActivity.class);
-				startActivity(i);
+				i.putExtra(CheatActivity.EXTRA_ANSWER_IS_TRUE, mQuestionsBank[mCurrentIndex].isTrueQuestion());
+				startActivityForResult(i, 0);
 			}
 		});
     }
@@ -126,10 +138,14 @@ public class QuizActivity extends ActionBarActivity {
     private void checkAnswer(boolean userPressedTrue) {
     	boolean answerIsTrue = mQuestionsBank[mCurrentIndex].isTrueQuestion();
     	int messageResId = 0;
-    	if (userPressedTrue == answerIsTrue) {
-    		messageResId = R.string.correct_toast;
-    	} else {
-    		messageResId = R.string.incorrect_toast;
+    	if (mIsCheater)
+    		messageResId = R.string.judgment_toast;
+    	else {
+	    	if (userPressedTrue == answerIsTrue) {
+	    		messageResId = R.string.correct_toast;
+	    	} else {
+	    		messageResId = R.string.incorrect_toast;
+	    	}
     	}
     	Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
