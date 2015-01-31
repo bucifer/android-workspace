@@ -28,12 +28,18 @@ public class QuizActivity extends ActionBarActivity {
 		new TrueFalse(R.string.question_asia, true),
 	};
 	private int mCurrentIndex = 0;
-	
+	private static final String TAG = "TERRY";
+	private static final String KEY_INDEX = "index";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+        
+        //saved instance state is a way of persisting data even when activities get destroyed on device orientation rotation
+        if (savedInstanceState != null) {
+        	mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+        }
         
         mQuestionTextView = (TextView) findViewById(R.id.question_textview);
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +111,15 @@ public class QuizActivity extends ActionBarActivity {
     		messageResId = R.string.incorrect_toast;
     	}
     	Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
+    }
+    
+    @Override
+    //this override of onSaveInstanceState is necessary to persist questions ordering between device rotations
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+    	// TODO Auto-generated method stub
+    	super.onSaveInstanceState(savedInstanceState);
+    	Log.i(TAG, "On Save Instance State");
+    	savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
     }
     
     @Override
