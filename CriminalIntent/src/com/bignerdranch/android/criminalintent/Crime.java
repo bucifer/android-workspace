@@ -15,7 +15,11 @@ public class Crime {
 		mID = UUID.randomUUID();
 		mDate = new Date();
 	}
-
+	
+	public String toString() {
+		return mTitle;
+	}
+	
 	public Date getDate() {
 		return mDate;
 	}
