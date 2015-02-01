@@ -1,6 +1,7 @@
 package com.bignerdranch.android.criminalintent;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,29 @@ public class CrimePagerActivity extends FragmentActivity {
 			public Fragment getItem(int pos) {
 				Crime crime = mCrimes.get(pos);
 				return CrimeFragment.newInstance(crime.getID());
+			}
+		});
+		
+		//this is needed because ViewPager by default starts from index 0 of the array
+		//so if you select something from Listview, it will always start from Crime #0
+		//to prevent it, we get the extra, loop through crimes, find the right id and display it
+		UUID crimeId = (UUID)getIntent().getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
+		for (int i = 0; i < mCrimes.size(); i++) {
+			if (mCrimes.get(i).getID().equals(crimeId)) {
+				mViewPager.setCurrentItem(i);
+				break;
+			}
+		}
+		
+		//a listener method for changes in the ViewPager's page being displayed
+		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			public void onPageScrollStateChanged(int state) { }
+			public void onPageScrolled(int pos, float posOffset, int posOffsetPixels) { }
+			public void onPageSelected(int pos) {
+				Crime crime = mCrimes.get(pos);
+				if (crime.getTitle() != null) {
+					setTitle(crime.getTitle());
+				}
 			}
 		});
 	}
