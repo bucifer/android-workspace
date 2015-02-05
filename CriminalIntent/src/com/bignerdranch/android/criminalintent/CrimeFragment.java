@@ -167,7 +167,7 @@ public class CrimeFragment extends Fragment {
 		}
 	}
 
-	//"Up Button" or back navigation bar related
+	//"Up Button" or navigation item (OptionsItem in Android) related
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -181,13 +181,15 @@ public class CrimeFragment extends Fragment {
 		}
 	}
 
+
+
 	//onPause is a safe place to ensure that you save when you press Home and etc
 	@Override
 	public void onPause() {
 		super.onPause();
 		CrimeLab.get(getActivity()).saveCrimes();
 	}
-	
+
 
 	private void updateDate() {
 		Date date = mCrime.getDate();
